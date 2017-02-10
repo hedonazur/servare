@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     # third party
     'crispy_forms',
     'simple_history',
+    'social_django',
     # project
     'share.apps.AppConfig',
     'dictionary.apps.DictionaryConfig',
@@ -77,6 +78,34 @@ MIDDLEWARE_CLASSES = [
 ROOT_URLCONF = 'boar_bar.urls'
 
 TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'APP_DIRS': True,
+        'DIRS': [
+            os.path.join(BASE_DIR, 'common', 'templates')
+        ],
+        'OPTIONS': {
+            'match_extension': '.html',
+            'match_regex': r'^(?!admin/).*',
+            'filters': {
+                'backend_name': 'common.filters.backend_name',
+                'backend_class': 'common.filters.backend_class',
+                'icon_name': 'common.filters.icon_name',
+                'social_backends': 'common.filters.social_backends',
+                'legacy_backends': 'common.filters.legacy_backends',
+                'oauth_backends': 'common.filters.oauth_backends',
+                'filter_backends': 'common.filters.filter_backends',
+                'slice_by': 'common.filters.slice_by'
+            },
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+            ],
+        }
+    },
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [],
@@ -128,6 +157,16 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.open_id.OpenIdAuth',
+    'social_core.backends.facebook.FacebookOAuth2',
+    'social_core.backends.google.GoogleOpenId',
+    'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.google.GoogleOAuth',
+    'social_core.backends.twitter.TwitterOAuth',
+    'social_core.backends.yahoo.YahooOpenId',
+    'django.contrib.auth.backends.ModelBackend',
+)
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/

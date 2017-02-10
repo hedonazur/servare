@@ -2,14 +2,39 @@
 {% load crispy_forms_tags %}
 
 
-<form method='post' action='{% url 'login' %}'>
-  {% csrf_token %}
-  {{ form|crispy }}
-
-  <div class='form-group'>
-    <input type='text' class='form-control' name='username' placeholder='Nuzza' />
-    <input type='password' class='form-control' name='password' placeholder='Passvoadd' />
-    <input type='hidden' name='previous' value='{{ request.path }}' />
-  </div>
-  <input class='btn' type='submit' value='{% trans 'Login' %}' name='login' />
-</form>
+<div class="social">
+    {% for sublist in available_backends|social_backends|slice_by(10) %}
+        <div class="row">
+            {% for name, backend in sublist %}
+              {% set association = associated.get(name) %}
+              {% if association %}
+                <form id="{{ name }}-disconnect"
+                      class="disconnect-form col-md-2"
+                      action="{{ url("social:disconnect_individual", backend=association.provider, association_id=association.id) }}"
+                      method="post">
+                  <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                  <a class="btn btn-danger" name="{{ backend|backend_class }}" href="#">
+                    <i class="fa fa-{{ name|icon_name }}"></i>
+                    Disconnect {{ backend|backend_name }}
+                  </a>
+                </form>
+              {% else %}
+                {% if name == "google-plus" %}
+                  <div class="col-md-2 btn btn-default" id="{{ name }}-button" name="{{ backend|backend_class }}">
+                    <i class="fa fa-{{ name|icon_name }}"></i>
+                    {{ backend|backend_name }}
+                  </div>
+                {% else %}
+                  <a id="{{ name }}-button"
+                     class="col-md-2 btn btn-default"
+                     name="{{ backend|backend_class }}"
+                     href="{{ url("social:begin", backend=name) }}">
+                    <i class="fa fa-{{ name|icon_name }}"></i>
+                    {{ backend|backend_name }}
+                  </a>
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+        </div>
+    {% endfor %}
+</div>

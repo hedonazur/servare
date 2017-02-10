@@ -61,6 +61,7 @@ urlpatterns = [
         r'^favicon\.ico$',
         RedirectView.as_view(url='/static/favicon.png', permanent=True)
     ),
+    url(r'', include('social_django.urls', namespace='social')),
     url(
         r'^.*$',
         NotExisting.as_view(),
