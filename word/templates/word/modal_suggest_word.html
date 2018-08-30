@@ -224,6 +224,7 @@ $(document).ready(function(){
     });
     $('#tag').selectize({
         maxItems: 4,
+        plugins: ['remove_button'],
         valueField: 'name',
         labelField: 'name',
         searchField: ['name', 'description'],
@@ -248,6 +249,7 @@ $(document).ready(function(){
     });
     $('#synonym').selectize({
         maxItems: 4,
+        plugins: ['remove_button'],
         valueField: 'name',
         labelField: 'name',
         searchField: ['name', 'description'],
